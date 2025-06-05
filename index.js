@@ -1,60 +1,27 @@
-import http from "http";
-import fs from "fs";
+const express = require("express");
+const path = require("path");
+const app = express();
 
-const server = http
-  .createServer((req, res) => {
-    if (req.url === "/") {
-      fs.readFile("./index.html", (err, data) => {
-        if (err) {
-          res.writeHead(500);
-          res.end("Error Loading HTML");
-          return;
-        }
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(data);
-      });
-    } else if (req.url === "/about") {
-      fs.readFile("./about.html", (err, data) => {
-        if (err) {
-          res.writeHead(500);
-          res.end("Error Loading HTML");
-          return;
-        }
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(data);
-      });
-    } else if (req.url === "/contact-me") {
-      fs.readFile("./contact-me.html", (err, data) => {
-        if (err) {
-          res.writeHead(500);
-          res.end("Error Loading HTML");
-          return;
-        }
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(data);
-      });
-    } else if (req.url === "/style.css") {
-      fs.readFile("./style.css", (err, data) => {
-        if (err) {
-          res.writeHead(500);
-          res.end("Error Loading CSS");
-          return;
-        }
-        res.writeHead(200, { "Content-Type": "text/css" });
-        res.end(data);
-      });
-    } else {
-      fs.readFile("./404.html", (err, data) => {
-        if (err) {
-          res.writeHead(500);
-          res.end("Error Loading HTML");
-          return;
-        }
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(data);
-      });
-    }
-  })
-  .listen(8000, () => {
-    console.log("server running at localhost 8000");
-  });
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "./index.html"));
+});
+
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(__dirname, "./about.html"));
+});
+
+app.get("/contact-me", (req, res) => {
+  res.sendFile(path.join(__dirname, "./contact-me.html"));
+});
+
+app.get("/style.css", (req, res) => {
+  res.sendFile(path.join(__dirname, "./style.css"));
+});
+
+app.use((req, res) =>
+  res.status(404).sendFile(path.join(__dirname, "./404.html")),
+);
+
+app.listen(8000, () => {
+  console.log("server running at localhost 8000");
+});
